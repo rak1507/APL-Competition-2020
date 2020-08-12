@@ -14,4 +14,4 @@ P4←(,⍳8 8)∩((((3=+/¨∘|)⊢⍤/⊢),∘.,⍨¯2 ¯1 1 2)∘+⊂)    ⍝ 
 P5←(∨/2=/'n '∘,)¨    ⍝ pretty short, idk why they suggest using ⊆
 
 ⍝ needs ⎕IO←0 :(
-P6←10|⎕D,'__ADGJMPTW__BEHKNQUX__CFILORVY_______S_Z'∘⍳   ⍝ modulus go brrr
+P6←10|(⎕D,'AAADGJMPTW')∘⍸    ⍝ fun
