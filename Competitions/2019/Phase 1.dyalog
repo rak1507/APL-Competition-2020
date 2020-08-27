@@ -16,5 +16,5 @@ P5←(∨/2=/'n '∘,)¨    ⍝ pretty short, idk why they suggest using ⊆
 ⍝ needs ⎕IO←0 :(
 P6←10|(⎕D,'AAADGJMPTW')∘⍸    ⍝ fun
 
-
-('a', ((⌈-.5×10-7) ⌽ 10 ↑ 'Problem'))
+P7←((≢⍤⊢,⊣)(⊣⍴(⊃(,/⊢)))((⌈¯0.5×⊣-⊣⌊≢⍤⊢)⌽↑)¨)    ⍝ terrible first draft tacit
+P7←(,⍨∘≢)⍴∘∊((⌈¯0.5×⊣-⌊∘≢)⌽↑)¨    ⍝ improved by the big brains at the APL orchard
