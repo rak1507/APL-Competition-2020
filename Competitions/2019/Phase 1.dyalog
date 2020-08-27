@@ -15,3 +15,6 @@ P5←(∨/2=/'n '∘,)¨    ⍝ pretty short, idk why they suggest using ⊆
 
 ⍝ needs ⎕IO←0 :(
 P6←10|(⎕D,'AAADGJMPTW')∘⍸    ⍝ fun
+
+
+('a', ((⌈-.5×10-7) ⌽ 10 ↑ 'Problem'))
