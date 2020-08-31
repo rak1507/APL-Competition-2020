@@ -11,7 +11,8 @@ P3←{{⍺,(⊣,(⍎1⍕100×÷∘(≢w)))1-⍨≢⍵}⌸'ABCDF',(w←⍵)}  ⍝
 
 P4←(,⍳8 8)∩((((3=+/¨∘|)⊢⍤/⊢),∘.,⍨¯2 ¯1 1 2)∘+⊂)    ⍝ tacits are cool
 
-P5←(∨/2=/'n '∘,)¨    ⍝ pretty short, idk why they suggest using ⊆
+P5←(∨/2=/'n '∘,)¨    ⍝ first draft tacit
+P5←{∨/2=/,⍵}¨∘⊆     ⍝ better dfn that works for single words
 
 ⍝ needs ⎕IO←0 :(
 P6←10|(⎕D,'AAADGJMPTW')∘⍸    ⍝ fun
