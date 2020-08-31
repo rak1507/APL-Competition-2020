@@ -19,3 +19,5 @@ P6←10|(⎕D,'AAADGJMPTW')∘⍸    ⍝ fun
 P7←((≢⍤⊢,⊣)(⊣⍴(⊃(,/⊢)))((⌈¯0.5×⊣-⊣⌊≢⍤⊢)⌽↑)¨)    ⍝ terrible first draft tacit
 P7←(,⍨∘≢)⍴∘∊((⌈¯0.5×⊣-⌊∘≢)⌽↑)¨    ⍝ improved by the big brains at the APL orchard
 P7←(⌈¯2÷⍨0⌈-∘≢¨)⌽↑⍤0 1∘↑    ⍝ refactored to be more array oriented 
+
+P8←+/2(.5*⍨(+/2*⍨-))/⊢⍴⍨1+≢  ⍝ first draft, looks ok, too many parens and ⍨s
