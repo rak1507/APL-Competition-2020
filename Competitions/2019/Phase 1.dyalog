@@ -21,3 +21,6 @@ P7←(,⍨∘≢)⍴∘∊((⌈¯0.5×⊣-⌊∘≢)⌽↑)¨    ⍝ improved by
 P7←(⌈¯2÷⍨0⌈-∘≢¨)⌽↑⍤0 1∘↑    ⍝ refactored to be more array oriented 
 
 P8←+/2(.5*⍨(+/2*⍨-))/⊢⍴⍨1+≢  ⍝ first draft, looks ok, too many parens and ⍨s
+
+
+draft - 2÷⍨(|∘(-/)(+/∘(×/)¨(0 1)(0 ¯1)∘.⊖⊂∘↑))
