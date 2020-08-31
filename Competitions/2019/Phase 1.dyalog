@@ -22,5 +22,5 @@ P7←(⌈¯2÷⍨0⌈-∘≢¨)⌽↑⍤0 1∘↑    ⍝ refactored to be more a
 
 P8←+/2(.5*⍨(+/2*⍨-))/⊢⍴⍨1+≢  ⍝ first draft, looks ok, too many parens and ⍨s
 
-
-draft - 2÷⍨(|∘(-/)(+/∘(×/)¨(0 1)(0 ¯1)∘.⊖⊂∘↑))
+P9←2÷⍨(|∘(-/)(+/∘(×/)¨(0 1)(0 ¯1)∘.⊖⊂∘↑∘,∘⊆))  ⍝ tacit, too many ∘s
+P9←{2÷⍨|-/+/¨×/¨(0 1)(0 ¯1)∘.⊖⊂↑,⊆⍵}   ⍝ much neater dfn
