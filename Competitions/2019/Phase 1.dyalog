@@ -13,6 +13,7 @@ P4←(,⍳8 8)∩((((3=+/¨∘|)⊢⍤/⊢),∘.,⍨¯2 ¯1 1 2)∘+⊂)    ⍝ 
 
 P5←(∨/2=/'n '∘,)¨    ⍝ first draft tacit
 P5←{∨/2=/,⍵}¨∘⊆     ⍝ better dfn that works for single words
+P5←(∨/2=/,)¨∘⊆      ⍝ that but in a tacit
 
 ⍝ needs ⎕IO←0 :(
 P6←10|(⎕D,'AAADGJMPTW')∘⍸    ⍝ fun
