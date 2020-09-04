@@ -1,4 +1,4 @@
-P1←{⍵⊂⍨(≢⍵)⍴⍺↑1}     ⍝ DFN
+P1←{⍵⊂⍨(≢⍵)⍴⍺↑1}     ⍝ dfn solution
 
 P2←⌷∘'FDCBA'(⊂0 65 70 80 90∘⍸)     ⍝ tacit function, not sure how to remove parens
 P2←{'FDCBA'[0 65 70 80 90⍸⍵]}      ⍝ dfn version
