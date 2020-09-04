@@ -12,8 +12,7 @@ P5←(∨/2=/'n '∘,)¨    ⍝ first draft tacit
 P5←{∨/2=/,⍵}¨⊆     ⍝ better dfn that works for single words
 P5←(∨/2=/,)¨⊆      ⍝ that but in a tacit
 
-⍝ needs ⎕IO←0 :(
-P6←10|(⎕D,'AAADGJMPTW')∘⍸    ⍝ fun
+P6←10|((1↓⎕D),'AAADGJMPTW')∘⍸   ⍝ fun
 
 P7←((≢⍤⊢,⊣)(⊣⍴(⊃(,/⊢)))((⌈¯0.5×⊣-⊣⌊≢⍤⊢)⌽↑)¨)    ⍝ terrible first draft tacit
 P7←(,⍨∘≢)⍴∘∊((⌈¯0.5×⊣-⌊∘≢)⌽↑)¨    ⍝ improved by the big brains at the APL orchard
