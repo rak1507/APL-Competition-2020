@@ -18,3 +18,17 @@ a ← (+,-)↓⍉2⊥⍣¯1⊢⎕A⍳'ABCDFGHLN'
 step ← {(a b n) ← ⍵ ⋄ (b-a)÷(n-1)}
 range ← {(⊃⍵)+(step ⍵)×0,⍳(⊃⌽⍵)-1} 
 int ← {(step ⍵)×+/⍺⍺ range ⍵} 
+
+ rect←{
+     (a b n)←⍵
+     step←n÷⍨b-a
+     range←a+step×1-⍨⍳n
+     step×+/⍺⍺ range
+ }
+ 
+  trap←{
+     (a b n)←⍵
+     step←n÷⍨b-a
+     range←a+step×1-⍨⍳n+1
+     2÷⍨step×+/2+/⍺⍺ range
+ }
