@@ -1,5 +1,5 @@
 ⎕IO←0
-data ← ↑(⎕UCS 10) (≠⊆⊢) ⊃⎕NGET 'Day 3.txt'
+data ← ↑⊃⎕NGET 'Day 3.txt' 1
 trav ← {+/'#'=⌷∘⍵¨↓⍉(⊃⌽⍴⍵)|@1⊢⍺×⍤0 1⊢⍳⌊(⊃⍺)÷⍨≢⍵}
 
 ⍝ Part 1
