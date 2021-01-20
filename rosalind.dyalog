@@ -7,4 +7,15 @@
 ⍝ Rabbits and Recurrence Relations
 {⊃2↓⍵{⍵,⍨1 ⍺+.×2↑⍵}⍣⍺⊢1 1}/
 ⍝ Computing GC Content
-{i m⌷⍨¨⊃⍒m←{100×(≢⍵)÷⍨+/⍵∊'CG'}¨,/↑⍵⊆⍨s⊣i←1↓¨⍵/⍨~s←∧⌿∨⌿¨'ACTG'∘.=⍵}
+{i m⊃⍨¨⊃⍒m←{100×(≢⍵)÷⍨+/⍵∊'CG'}¨,/↑⍵⊆⍨s⊣i←1↓¨⍵/⍨~s←∧⌿∨⌿¨'ACTG'∘.=⍵}
+⍝ Counting Point Mutations
++/≠⌿
+⍝ Mendel's First Law
+{(2!+/⍵)÷⍨4÷⍨+/∊4⌊2⊥¨¨(⊢↓¨⍨1+⍳∘≢)↓∘.,⍨⍵/2 1 0}
+⍝ Translating RNA into Protein 
+r←'FFLLSSSSYYZZCCZWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG'
+{⊃s⊆⍨~<\'Z'=s←r[4⊥⍉'UCAG'⍳↑⍵⊂⍨1 0 0⍴⍨≢⍵]}
+⍝ Finding a Motif in DNA
+{1+⍸⊃⍷⍨/⍵}
+⍝ Consensus and Profile
+{↑o,⍨⊂'ACGT'⌷⍨⊂⊃⍤⍒⍤1⍉m⊣o←↓⍕'ACGT',':',m←+⌿⍤2⊢'ACGT'∘.=↑,/↑⍵⊆⍨~'R'∊¨⍵}
