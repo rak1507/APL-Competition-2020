@@ -19,3 +19,7 @@ r←'FFLLSSSSYYZZCCZWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG'
 {1+⍸⊃⍷⍨/⍵}
 ⍝ Consensus and Profile
 {↑o,⍨⊂'ACGT'⌷⍨⊂⊃⍤⍒⍤1⍉m⊣o←↓⍕'ACGT',':',m←+⌿⍤2⊢'ACGT'∘.=↑,/↑⍵⊆⍨~'R'∊¨⍵}
+⍝ Mortal Fibonacci Rabbits
+{2⊃⍵{⍵,⍨-/⍵[1-⍨(≢⍵)⌊1(⍺+1)2]}⍣⍺⊢1 1 1 0}/
+⍝ Overlap Graphs
+{↑{⍺,' ',⍵}/↑,/↑⌷∘(1↓¨n/⍵)¨¨⍸⍉∘.{(⍺≢⍵)∧(3↑⍺)≡¯3↑⍵}⍨⊃,/,/¨⍵⊆⍨~n←'R'∊¨⍵}
