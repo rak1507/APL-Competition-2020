@@ -23,3 +23,5 @@ r←'FFLLSSSSYYZZCCZWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG'
 {2⊃⍵{⍵,⍨-/⍵[1-⍨(≢⍵)⌊1(⍺+1)2]}⍣⍺⊢1 1 1 0}/
 ⍝ Overlap Graphs
 {↑{⍺,' ',⍵}/↑,/↑⌷∘(1↓¨n/⍵)¨¨⍸⍉∘.{(⍺≢⍵)∧(3↑⍺)≡¯3↑⍵}⍨⊃,/,/¨⍵⊆⍨~n←'R'∊¨⍵}
+⍝ Calculating Expected Offspring
+{2÷⍨+/⍵/4 4 4 3 2 0}
