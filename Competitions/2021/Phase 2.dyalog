@@ -2,6 +2,9 @@
 {⍵⊂⍨(⍵='X')∨≠\⍵∊'123456789-/'} ⍝ partition into turns
 
 ⍝ Problem 2
+MakeList←{⍵≡'':⍬ ⋄ to←⊣-×⍤-×∘⍳1+|⍤- ⋄ ⍎'([-¯]?\d+)-([-¯]?\d+)'⎕R'((\1)to(\2))'⊢⍵}
+⍝ using ⍎ and regex is much easier than parsing without it
+⍝ to could be dfns.to
 
 ⍝ Problem 3
 
