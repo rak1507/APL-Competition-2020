@@ -1,4 +1,5 @@
 ⍝ Problem 1
+{⍵⊂⍨(⍵='X')∨≠\⍵∊'123456789-/'} ⍝ partition into turns
 
 ⍝ Problem 2
 
