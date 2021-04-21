@@ -32,3 +32,11 @@ int ← {(step ⍵)×+/⍺⍺ range ⍵}
      range←a+step×1-⍨⍳n+1
      2÷⍨step×+/2+/⍺⍺ range
  }
+
+
+ lambertW←{
+     ⍺←1J1
+     deriv←{dx←0.00001 ⋄ 2÷⍨dx÷⍨-/⍺⍺¨⍵+1 ¯1×dx}
+     nr←{⍵-(⍺⍺ ⍵)÷(⍺⍺ deriv ⍵)}
+     (⍵-⍨⊢×*)nr⍣≡⍺
+ }
