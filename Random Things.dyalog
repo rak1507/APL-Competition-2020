@@ -34,7 +34,6 @@ int ← {(step ⍵)×+/⍺⍺ range ⍵}
  }
  
   W←{
-     ⎕CT←⎕DCT←0
      ⍺←1J1
      deriv←{dx←0.00001 ⋄ 2÷⍨dx÷⍨-/⍺⍺¨⍵+1 ¯1×dx}
      nr←{⍵-(⍺⍺ ⍵)÷(⍺⍺ deriv ⍵)}
