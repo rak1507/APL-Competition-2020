@@ -9,6 +9,8 @@ MakeList←{⍵≡'':⍬ ⋄ to←⊣-×⍤-×∘⍳1+|⍤- ⋄ ⍎'([-¯]?\d+)-
 ⍝ Problem 3
 
 ⍝ Problem 4
+{(+/÷≢)¨(¯1↓1↓m⊂⍳≢⍵)/⍨0>2×/2×⍤-/⍵/⍨m←1,2≠/⍵}
+⍝ need to add length checks
 
 ⍝ Problem 5
 lexf←{0≡⍺:,⊂''⋄,⍵∘.,⍵∇⍨⍺-1}
