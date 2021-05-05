@@ -11,6 +11,15 @@ MakeList←{⍵≡'':⍬ ⋄ to←⊣-×⍤-×∘⍳1+|⍤- ⋄ ⍎'([-¯]?\d+)-
 ⍝ Problem 4
 {(+/÷≢)¨(¯1↓1↓m⊂⍳≢⍵)/⍨0>2×/2×⍤-/⍵/⍨m←1,2≠/⍵}
 ⍝ need to add length checks
+ MinMax←{
+     3>≢⍵:⍬ ⍝ needs to have at least 3 values
+     mask←1,2≠/⍵ ⍝ mask of starts of unique runs
+     diffs←2×⍤-/mask/⍵ ⍝ signs of differences (¯1 and 1)
+     0≡≢diffs:⍬ ⍝ exit as 2×/ will error
+     idx←(0>2×/diffs)/¯1↓1↓mask⊂⍳≢⍵ ⍝ filter groups of indices by occurrences of inflection points
+     (+/÷≢)¨idx ⍝ average each group
+ }
+
 
 ⍝ Problem 5
 lexf←{0≡⍺:,⊂''⋄,⍵∘.,⍵∇⍨⍺-1}
