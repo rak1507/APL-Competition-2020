@@ -37,4 +37,5 @@ lcsq←{∨/0=≢¨⍺⍵:''⋄=/⊃¨⍺⍵:(⊃⍺),(1↓⍺)∇1↓⍵⋄(⍺
 ⍝ BUGS: duplicates: see 'AAAAA' f 'AAA' :(
 ⍝ Hunt–Szymanski 
 {(' ',⍵)⍪⍺,⍉¯1↓⍉¯1↓(××1+(⌈⍀¯1⊖⍉)⍣2)⍣≡0,⍨0⍪⍨⍺∘.=⍵}
+{{⍺×1+⌈⍀⌈\¯1⌽¯1⊖⍵}⍣≡⍨0,⍨0⍪⍨⍺∘.=⍵}
 ⍝ https://code.jsoftware.com/wiki/Essays/Longest_Common_Subsequence
