@@ -32,11 +32,5 @@ tree←{
     ⎕IO←1 ⍝ more convenient :(
     n←⊃⍵
     cons←1↓⍵
-    m←∨.∧⍨⍣≡(∘.=⍨⍳n)∨∨∘⍉⍨n n↑⍸⍣¯1{⍵⌷⍨⊂⍋⍵}cons
-    ⍝ transitive closure
-    count←0
-    _←{count+←1
-        f/⍵⌿⍨f←~⊣⌿⍵   ⍝ remove all nodes connected to the first one
-    }⍣{0∊⍴⍺}m        ⍝ until there are none left
-    count-1 ⍝ number of strongly connected components minus 1
+    1-⍨≢∪∨.∧⍨⍣≡(∘.=⍨⍳n)∨∨∘⍉⍨n n↑⍸⍣¯1{⍵⌷⍨⊂⍋⍵}cons
 }
