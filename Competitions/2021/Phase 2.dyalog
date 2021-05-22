@@ -24,7 +24,15 @@ Divvy←{a b←1⌈(⍺,≢⍵)[⍋⍺,≢⍵] ⋄ ⍵⊂⍨≠∘⍸⍣(⍺<≢
 
 ⍝ Problem 5
 lexf←{0≡⍺:,⊂''⋄,⍵∘.,⍵∇⍨⍺-1}
-lexv←{1≡⍺:,¨⍵⋄,⍵,⍵∘.,⍵∇⍨⍺-1}
+⍝lexv←{1≡⍺:,¨⍵⋄,⍵,⍵∘.,⍵∇⍨⍺-1}
+lexv←{
+   ⍝ Create n copies ⍺⍴⊂,¨⍵
+   ⍝ Outer product scan ∘.,\
+   ⍝ Merge with ⍪⍤3⍤,/
+   ⍝ Flatten ,⊃
+    ,⊃⍪⍤3⍤,/∘.,\⍺⍴⊂,¨⍵
+}
+
 ⍝ experimented with ∘.,/ vs ∘.,\ but the recursive solution was nicer
 ⍝ can't find a non branching non recursive solution
 
