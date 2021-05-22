@@ -23,9 +23,10 @@ Divvy←{a b←1⌈(⍺,≢⍵)[⍋⍺,≢⍵] ⋄ ⍵⊂⍨≠∘⍸⍣(⍺<≢
 
 
 ⍝ Problem 5
-lexf←{0≡⍺:,⊂''⋄,⍵∘.,⍵∇⍨⍺-1}
+⍝lexf←{0≡⍺:,⊂''⋄,⍵∘.,⍵∇⍨⍺-1}
 ⍝lexv←{1≡⍺:,¨⍵⋄,⍵,⍵∘.,⍵∇⍨⍺-1}
 
+⍝ Submitted:
 lexf←{
    ⍝ Handle 0 case
    ⍺≡0:,⊂⍬
@@ -42,9 +43,6 @@ lexv←{
    ⍝ Flatten ,⊃
    ,⊃⍪⍤3⍤,/∘.,\⍺⍴⊂,¨⍵
 }
-
-⍝ experimented with ∘.,/ vs ∘.,\ but the recursive solution was nicer
-⍝ can't find a non branching non recursive solution
 
 ⍝ Problem 6
 
