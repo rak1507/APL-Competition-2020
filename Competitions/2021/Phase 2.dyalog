@@ -56,10 +56,10 @@ lexv←{
 ⍝ Problem 6
 
 ValidBoard←{
-    ⍺⍺≢⍴⍵:0                ⍝ same shape
-    ~∧/(∊⍵)∊0,⍳≢⍵⍵:0       ⍝ valid board numbers
-    ships←(⊢,⍥⍪⍪¨)⍵⍵⍴¨⍳≢⍵⍵ ⍝ create ships horizontally and vertically
-    ∧/∨/(∨/⍤,⍷∘⍵)¨ships    ⍝ are all ships on the board?
+    ⍺⍺≢⍴⍵:0              ⍝ same shape
+    ~∧/(∊⍵)∊0,⍳≢⍵⍵:0     ⍝ valid board numbers
+    ships←(⍪,⍪¨)⍵⍵⍴¨⍳≢⍵⍵ ⍝ create ships
+    ∧/∨/(∨/⍤,⍷∘⍵)¨ships  ⍝ are all ships on the board?
 }
 
 ⍝ Problem 7
