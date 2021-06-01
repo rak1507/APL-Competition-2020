@@ -46,6 +46,13 @@ lexv←{
 
 ⍝ Problem 6
 
+ValidBoard←{
+    ⍺⍺≢⍴⍵:0                ⍝ same shape
+    ~∧/(∊⍵)∊0,⍳≢⍵⍵:0       ⍝ valid board numbers
+    ships←(⊢,⍥⍪⍪¨)⍵⍵⍴¨⍳≢⍵⍵ ⍝ create ships horizontally and vertically
+    ∧/∨/(∨/⍤,⍷∘⍵)¨ships    ⍝ are all ships on the board?
+}
+
 ⍝ Problem 7
 sseq←{w←⍵ ⋄ r←⍸{w↓⍨←⍵=⊃w,0}¨⍺ ⋄ r≡⍥≢⍵:1,⊂r ⋄ 0,⊂⍬}
 lcsq←{∨/0=≢¨⍺⍵:''⋄=/⊃¨⍺⍵:(⊃⍺),(1↓⍺)∇1↓⍵⋄(⍺∇1↓⍵){⍺⍵⊃⍨⊃⍒≢¨⍺⍵}⍵∇⍨1↓⍺} ⍝ naive
