@@ -2,9 +2,18 @@
 {⍵⊂⍨(⍵='X')∨≠\⍵∊'123456789-/'} ⍝ partition into turns
 
 ⍝ Problem 2
-MakeList←{⍵≡'':⍬ ⋄ to←⊣-×⍤-×∘⍳1+|⍤- ⋄ ⍎'([-¯]?\d+)-([-¯]?\d+)'⎕R'((\1)to(\2))'⊢⍵}
+MakeList←{⍵≡'':⍬ ⋄ to←⊣-×⍤-×∘⍳1+|⍤- ⋄ ⍎'([-¯]?\d+)-([-¯]?\d+)'⎕R'((\1)to(\2))'⊢⍵} ⍝ io←0
 ⍝ using ⍎ and regex is much easier than parsing without it
 ⍝ to could be dfns.to
+
+MakeList←{
+    ⍵≡'':⍬               ⍝ empty input
+    to←⊣-×⍤-×1-⍨∘⍳1+|⍤-  ⍝ fill gaps
+    ⍝ replace with regex
+    ⍝ '44-42,-4--7,¯1-¯3,42-44' becomes '((44)to(42)),((-4)to(-7)),((¯1)to(¯3)),((42)to(44))'
+    ⍝ and then eval with ⍎
+    ⍎'([-¯]?\d+)-([-¯]?\d+)'⎕R'((\1)to(\2))'⊢⍵
+}
 
 ⍝ Problem 3
 Divvy←{a b←1⌈(⍺,≢⍵)[⍋⍺,≢⍵] ⋄ ⍵⊂⍨≠∘⍸⍣(⍺<≢⍵)⊢(⌊b÷a)+(a↑1⍴⍨a|b)}
