@@ -8,7 +8,7 @@ ValidGame←{
     first9←'(','){9}',⍨1↓∊'|',¨main                 ⍝ regex for the first 9 frames
     end←'(',')',⍨1↓∊'|',¨basic,spare_end,strike_end ⍝ regex for the end
     total←'-'@(=∘'0')⊢'^',first9,end,'$'            ⍝ entire regex
-    1≢≢⍴⍵:0                                         ⍝ ⍵ is a vector
+    (1≢≢⍴⍵)∧' '≡⊃0⍴⍵:0                              ⍝ ⍵ is a character vector
     (,⊂⍵)≡total ⎕S'&'⊢⍵                             ⍝ ⍵ matches regex (should be hardcoded for efficiency)
 }
 
