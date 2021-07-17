@@ -1,5 +1,16 @@
 ⍝ Problem 1
-{⍵⊂⍨(⍵='X')∨≠\⍵∊'123456789-/'} ⍝ partition into turns
+ValidGame←{
+    ⎕IO←0
+    basic←{(⍕⍵),'[',']',⍨∊⍕¨⍳10-⍵}¨⍳10              ⍝ basic turn, no strikes or spares
+    main←'X',(2∘↑,'/',2∘↓)¨basic                    ⍝ with strikes + spares
+    spare_end←('/[0123456789X]',⍨⊃)¨basic           ⍝ if frame 10 starts with a spare
+    strike_end←'[0123456789X]'(⊂,⍨∘⊃)@0⊢'X',¨main   ⍝ if frame 10 starts with a strike
+    first9←'(','){9}',⍨1↓∊'|',¨main                 ⍝ regex for the first 9 frames
+    end←'(',')',⍨1↓∊'|',¨basic,spare_end,strike_end ⍝ regex for the end
+    total←'-'@(=∘'0')⊢'^',first9,end,'$'            ⍝ entire regex
+    1≢≢⍴⍵:0                                         ⍝ ⍵ is a vector
+    (,⊂⍵)≡total ⎕S'&'⊢⍵                             ⍝ ⍵ matches regex (should be hardcoded for efficiency)
+}
 
 ⍝ Problem 2
 MakeList←{⍵≡'':⍬ ⋄ to←⊣-×⍤-×∘⍳1+|⍤- ⋄ ⍎'([-¯]?\d+)-([-¯]?\d+)'⎕R'((\1)to(\2))'⊢⍵} ⍝ io←0
