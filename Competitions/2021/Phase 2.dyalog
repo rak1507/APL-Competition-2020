@@ -12,6 +12,15 @@ ValidGame←{
     (,⊂⍵)≡total ⎕S'&'⊢⍵                             ⍝ ⍵ matches regex (should be hardcoded for efficiency)
 }
 
+BowlingScore←{
+    ⎕IO←0
+    scores←2{10<⍵:10-⍺ ⋄ ⍵}/0,'-123456789X'⍳⍵ ⍝ score of each roll
+    frames←scores⊆⍨10⌊+\(⍵='X')∨≠\scores<10   ⍝ partition into frames
+    ⍝ if it is a strike or a spare, count 3 rolls
+    ⍝ otherwise count two
+    +\{+/⍵↑⍨2+10≤+/2↑⍵}¨3,/frames,0,0         ⍝ score for each frame + cumulative sum
+}
+
 ⍝ Problem 2
 MakeList←{⍵≡'':⍬ ⋄ to←⊣-×⍤-×∘⍳1+|⍤- ⋄ ⍎'([-¯]?\d+)-([-¯]?\d+)'⎕R'((\1)to(\2))'⊢⍵} ⍝ io←0
 ⍝ using ⍎ and regex is much easier than parsing without it
