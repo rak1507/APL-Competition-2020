@@ -74,32 +74,28 @@ lexv←{
 }
 
 ⍝ Problem 6
-Battleship←{
-    ⎕IO←0
-    ⍺⍺≢⍴⍵:0                       ⍝ correct shape
-    w←0,0,⍨0⍪0⍪⍨⍵                 ⍝ padding
-    scc←(⎕NS ⍬).(⍎'scc'⊣'scc'⎕CY'dfns')
-    diag←⍺∨1∊¨⍳3 3
-    i←,⍳⍴w
-    ⍝ split matrix into chunks
-    chunks←{⍵[⍋⍵]}¨i⊢∘⊂⌸⍨scc(≢⍉w)⊥¨¨i+∘⊂⍨¨,{⊂1-⍨⍸diag∧⍵=1 1⌷⍵}⌺3 3⊢1+w
-    chunks/⍨←×w[⊃¨chunks]         ⍝ filter non-zero chunks
-    straight←{
-        1<≢u←∪2-/⍵:0              ⍝ all uniformly spaced
-        (1+⍺⍺)≥+/|⊃u              ⍝ manhattan distance between gaps ≤ 1+(is diagonal?)
-    }
-    overlap←{
-    ⍝ do ⍺ and ⍵ overlap?
-        a b c d←⍺,⍵
-        ccw←{a b c←⍵ ⋄ ≤.×/a-¨↓⌽@1⍉↑c b}
-        (ccw a c d)(ccw a b c)∧.≠(ccw b c d)(ccw a b d)
-    }⍥{⌽2⍴1⌽⍵}
-    ∨/~⍺ straight¨chunks:0        ⍝ all straight
-    chunks{∨/overlap/¨⊃,/(⍳≢⍺)↑¨↓∘.(,⍥⊂)⍨⍺}⍣⍺⊢0:0 ⍝ of the diagonals, do any overlap?
-    ids←1-⍨w[⊃¨chunks]
-    (ids≢⍥≢⍵⍵)∨(ids≢⍋⍋ids):0      ⍝ ids has length of the fleet and is a permutation vector
-    (≢¨chunks)≡⍵⍵[ids]            ⍝ fleet matches
+straight←{
+    0≡≢⍵:1        ⍝ an empty line is straight
+    1<≢u←∪2-/⍵:0  ⍝ all uniformly spaced
+    (1+⍺⍺)≥+/|⊃u  ⍝ 1 square away accounting for diagonal
 }
+
+overlap←{
+    a b c d←⍺,⍥{⌽2⍴1⌽⍵}⍵  ⍝ first and last elements
+    ⍝ formula for overlap detection
+    ccw←{a b c←⍵ ⋄ ≤.×/a-¨↓⌽@1⍉↑c b}
+    (ccw a c d)(ccw a b c)∧.≠(ccw b c d)(ccw a b d)
+}
+
+Battleship←{
+    ⎕IO←1
+    ⍺⍺≢⍴⍵:0                            ⍝ correct shape
+    (i←⍳≢⍵⍵)≢0~⍨{⍵[⍋⍵]}∪∊⍵:0           ⍝ correct ship numbers
+    ⍵⍵≢≢¨chunks←i⍸⍤=¨⊂⍵:0              ⍝ correct lengths
+    ∨/~⍺ straight¨chunks:0             ⍝ they are all straight
+    chunks{0≡∨/,overlap/¨∘.(,⍥⊂)⍨⍺}⍣⍺⊢1 ⍝ no diagonal overlaps
+}
+
 ValidBoard←{0 (⍺⍺ Battleship ⍵⍵) ⍵}
 ValidBoard2←{1 (⍺⍺ Battleship ⍵⍵) ⍵}
 
