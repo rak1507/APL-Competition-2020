@@ -74,13 +74,34 @@ lexv←{
 }
 
 ⍝ Problem 6
-
-ValidBoard←{
-    ⍺⍺≢⍴⍵:0              ⍝ same shape
-    ~∧/(∊⍵)∊0,⍳≢⍵⍵:0     ⍝ valid board numbers
-    ships←(⍪,⍪¨)⍵⍵⍴¨⍳≢⍵⍵ ⍝ create ships
-    ∧/∨/(∨/⍤,⍷∘⍵)¨ships  ⍝ are all ships on the board?
+Battleship←{
+    ⎕IO←0
+    ⍺⍺≢⍴⍵:0                       ⍝ correct shape
+    w←0,0,⍨0⍪0⍪⍨⍵                 ⍝ padding
+    scc←(⎕NS ⍬).(⍎'scc'⊣'scc'⎕CY'dfns')
+    diag←⍺∨1∊¨⍳3 3
+    i←,⍳⍴w
+    ⍝ split matrix into chunks
+    chunks←{⍵[⍋⍵]}¨i⊢∘⊂⌸⍨scc(≢⍉w)⊥¨¨i+∘⊂⍨¨,{⊂1-⍨⍸diag∧⍵=1 1⌷⍵}⌺3 3⊢1+w
+    chunks/⍨←×w[⊃¨chunks]         ⍝ filter non-zero chunks
+    straight←{
+        1<≢u←∪2-/⍵:0              ⍝ all uniformly spaced
+        (1+⍺⍺)≥+/|⊃u              ⍝ manhattan distance between gaps ≤ 1+(is diagonal?)
+    }
+    overlap←{
+    ⍝ do ⍺ and ⍵ overlap?
+        a b c d←⍺,⍵
+        ccw←{a b c←⍵ ⋄ ≤.×/a-¨↓⌽@1⍉↑c b}
+        (ccw a c d)(ccw a b c)∧.≠(ccw b c d)(ccw a b d)
+    }⍥{⌽2⍴1⌽⍵}
+    ∨/~⍺ straight¨chunks:0        ⍝ all straight
+    chunks{∨/overlap/¨⊃,/(⍳≢⍺)↑¨↓∘.(,⍥⊂)⍨⍺}⍣⍺⊢0:0 ⍝ of the diagonals, do any overlap?
+    ids←1-⍨w[⊃¨chunks]
+    (ids≢⍥≢⍵⍵)∨(ids≢⍋⍋ids):0      ⍝ ids has length of the fleet and is a permutation vector
+    (≢¨chunks)≡⍵⍵[ids]            ⍝ fleet matches
 }
+ValidBoard←{0 (⍺⍺ Battleship ⍵⍵) ⍵}
+ValidBoard2←{1 (⍺⍺ Battleship ⍵⍵) ⍵}
 
 ⍝ Problem 7
 sseq←{w←⍵ ⋄ r←⍸{w↓⍨←⍵=⊃w,0}¨⍺ ⋄ r≡⍥≢⍵:1,⊂r ⋄ 0,⊂⍬}
