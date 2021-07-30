@@ -112,3 +112,20 @@ lcsq←{∨/0=≢¨⍺⍵:''⋄=/⊃¨⍺⍵:(⊃⍺),(1↓⍺)∇1↓⍵⋄(⍺
 {(' ',⍵)⍪⍺,⍉¯1↓⍉¯1↓(××1+(⌈⍀¯1⊖⍉)⍣2)⍣≡0,⍨0⍪⍨⍺∘.=⍵}
 {{⍺×1+⌈⍀⌈\¯1⌽¯1⊖⍵}⍣≡⍨0,⍨0⍪⍨⍺∘.=⍵}
 ⍝ https://code.jsoftware.com/wiki/Essays/Longest_Common_Subsequence
+
+lcsq←{
+    ⍺>⍥≢⍵:⍵ ∇ ⍺               ⍝ always call with minimum length on left
+    lcp←{n←+/∧\⍺=(≢⍺)↑⍵ ⋄ (n↑⍺)(n↓⍺)(n↓⍵)} ⍝ longest common prefix
+    pref a w←⍺ lcp ⍵          ⍝ prefix
+    suff a w←⌽¨a lcp⍥⌽w       ⍝ suffix
+    ⍝ construct the grid
+    m←⌈⍀⌈\¯1⊖¯1⌽{⍺×1+⌈⍀⌈\¯1⌽¯1⊖⍵}⍣≡⍨0,⍨0⍪⍨a∘.=w
+    backtrack←{
+    ⍝ backtrack to find sequence
+        0∊⍵:''
+        a[1-⍨⊃⍵]=w[1-⍨⊃⌽⍵]:(∇ ⍵-1),a[1-⍨⊃⍵]
+        m[⊂⍵-0 1]>m[⊂⍵-1 0]:(∇ ⍵-0 1)
+        ∇(⍵-1 0)
+    }
+    pref,suff,⍨backtrack≢¨a w ⍝ put it all together
+}
