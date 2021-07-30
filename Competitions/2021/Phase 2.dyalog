@@ -31,8 +31,19 @@ MakeList←{
     ⍝ and then eval with ⍎
     ⍎'([-¯]?\d+)-([-¯]?\d+)'⎕R'((\1)to(\2))'⊢⍵
 }
+
 ⍝ Problem 3
-Divvy←{a b←1⌈(⍺,≢⍵)[⍋⍺,≢⍵] ⋄ ⍵⊂⍨≠∘⍸⍣(⍺<≢⍵)⊢(⌊b÷a)+(a↑1⍴⍨a|b)}
+Divvy←{
+    a b←⍺(1⌈⌊,⌈)≢⍵     ⍝ a b are min and max, with minimum value 1
+    ⍝ split b into a parts 
+    ⍝ and then add extras
+    parts←⌊b÷a
+    extras←a↑(a|b)⍴1
+    ⍝ ≠⍸ converts from partitions per item to items per partition
+    ⍝ we do this if there are fewer partitions than items
+    ⍝ so if ⍺ < ≢⍵ or a = a
+    ⍵⊂⍨(≠⍸)⍣(a=⍺)⊢parts+extras
+}
 
 ⍝ Problem 4
 {(+/÷≢)¨(¯1↓1↓m⊂⍳≢⍵)/⍨0>2×/2×⍤-/⍵/⍨m←1,2≠/⍵}
