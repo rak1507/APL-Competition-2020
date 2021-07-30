@@ -100,16 +100,20 @@ ValidBoard←{0 (⍺⍺ Battleship ⍵⍵) ⍵}
 ValidBoard2←{1 (⍺⍺ Battleship ⍵⍵) ⍵}
 
 ⍝ Problem 7
-sseq←{w←⍵ ⋄ r←⍸{w↓⍨←⍵=⊃w,0}¨⍺ ⋄ r≡⍥≢⍵:1,⊂r ⋄ 0,⊂⍬}
-lcsq←{∨/0=≢¨⍺⍵:''⋄=/⊃¨⍺⍵:(⊃⍺),(1↓⍺)∇1↓⍵⋄(⍺∇1↓⍵){⍺⍵⊃⍨⊃⍒≢¨⍺⍵}⍵∇⍨1↓⍺} ⍝ naive
-{{m+⍺∧∨⍀∨\⍵≠m←⌈\⌈⍀⍵}⍣≡⍨ ⍺∘.=⍵} ⍝ create matrix to backtrack
-⍝ BUGS: duplicates: see 'AAAAA' f 'AAA' :(
-⍝ Hunt–Szymanski 
-{(' ',⍵)⍪⍺,⍉¯1↓⍉¯1↓(××1+(⌈⍀¯1⊖⍉)⍣2)⍣≡0,⍨0⍪⍨⍺∘.=⍵}
-{{⍺×1+⌈⍀⌈\¯1⌽¯1⊖⍵}⍣≡⍨0,⍨0⍪⍨⍺∘.=⍵}
-⍝ https://code.jsoftware.com/wiki/Essays/Longest_Common_Subsequence
+sseq←{
+    ⎕IO←1
+    w←⍵
+    ⍝ for each character c in ⍺
+    ⍝ check if c is equal to the next character in ⍵
+    ⍝ if so, move on to the next character in ⍵
+    ⍝ r is the indices where that is true
+    r←⍸{w↓⍨←⍵=⊃w,0}¨,⍺
+    r≡⍥≢⍵:1,⊂r
+    0,⊂⍬
+}
 
 lcsq←{
+    ⎕IO←0
     ⍺>⍥≢⍵:⍵ ∇ ⍺               ⍝ always call with minimum length on left
     lcp←{n←+/∧\⍺=(≢⍺)↑⍵ ⋄ (n↑⍺)(n↓⍺)(n↓⍵)} ⍝ longest common prefix
     pref a w←⍺ lcp ⍵          ⍝ prefix
