@@ -8,3 +8,8 @@ stats←{ ⍝ some stats stuff
     res⍪←'devs',⍥⊆(⍵-m)÷stdev
     res
 }
+least_squares←{
+    S←+.×-×⍥(+/)÷≢⍤⊣
+    n←≢⍺ ⋄ sxx←S⍨⍺ ⋄ syy←S⍨⍵ ⋄ sxy←⍺ S ⍵
+    (n÷⍨+/⍵-b×⍺)(b←sxy÷sxx)(sxy÷0.5*⍨sxx×syy)
+}
