@@ -50,3 +50,6 @@ int ← {(step ⍵)×+/⍺⍺ range ⍵}
 
 disp←{'f.i'⎕WC'Image'('Points'0 0)('Picture'b⊣'f'⎕WC'Form'('Coord' 'ScaledPixel')('Size'(⍴m⊣'b'⎕WC'Bitmap'('CBits'(m←⍺/⍺⌿⍵×16777215)))))}
 2 disp~⊖⍸⍣¯1∪{⍵[⍋⍵]}⌊500×{⍵,⊂2÷⍨(⊃⌽⍵)+(0 0)(0 1)(0.5,⍨2÷⍨3*0.5)⊃⍨?3}⍣20000⊂0.3 0.3
+
+
+unit←{(.5*⍨?0)×2 1○2×○?0} ⍝ random point on unit circle
