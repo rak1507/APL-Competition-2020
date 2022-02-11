@@ -20,3 +20,5 @@ tpdf←((1+⊢×÷⍨)*¯2÷⍨1+⊣)×(!2÷⍨1-⍨⊣)÷(.5*⍨○⍤⊣)×∘
 tcdf←{2÷⍨n÷⍨+/2+/⍺ tpdf ⍵-n÷⍨⍳(n←1000)×4-¯200}
 invtcdf←{f←⍵-⍨⍺∘tcdf⋄h←÷100⋄{⍵-(2×h×f ⍵)÷-/f¨⍵+h,-h}⍣(0.0001>|⍤-)1} 
 ⍝ 1.812 = 3 (⍎⍕) 10 invtcdf 0.95 https://www.sqa.org.uk/sqa/files_ccc/AHStatisticsDataBooklet.pdf
+
+chi←1⊥⊢(∊-×-÷⊢)+/∘.×+⌿÷1⊥∊ ⍝ takes mat argument
