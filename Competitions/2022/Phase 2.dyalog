@@ -18,7 +18,7 @@ runs←{1∨.=(+\⍵)⍸⍤1⍳⍺}
      ⍝ Function to modify vals as required
          start←rank↑⍵
          shape←rank↓⍵
-         coords←shape⊥⍣¯1⍳×/shape  ⍝ all coordinates - fast version of ⍉↑,¨,⍳shape
+         coords←shape⊤⍳×/shape  ⍝ all coordinates - fast version of ⍉↑,¨,⍳shape
          coords+⍤1 0←start-1       ⍝ increment to start position
          coords/⍨←size∧.>coords    ⍝ keep only the coordinates within bounds
          coords⊥⍨←size             ⍝ convert back to indices
@@ -28,6 +28,17 @@ runs←{1∨.=(+\⍵)⍸⍤1⍳⍺}
      size⍴vals               ⍝ reshape
  }
 
+ subspace←{
+     ⎕IO←0 ⍝ Nicer for this problem
+     size←⍴⍵
+     flat←,⍵
+     find←{
+         where←(⊣/,⊢/)⍸⍺=⍵  ⍝ first and last index of the subspace
+         coords←size⊤where  ⍝ convert to coords
+         ,⍉1+-⍨\coords      ⍝ shape←1+-⍨\coords and start←1+⊣/coords
+     }
+     flat find⍤1 0⊢1+⍳⌈/flat  ⍝ Find all subspaces
+ }
 
 fill←{⍺⍴(⍳⍤≢⌈.×⊢)∧/1=(⍉⍤2+⍀⍤2⊢⍵⍴⍨(≢⍵),2,2÷⍨⊢/⍴⍵)⍸⍤¯1⍤2 1⍤2↑,¨,⍳⍺}
 fill2←{⍺⍴(⍳⍤≢⌈.×⊢)∧⌿1=(2 3 1⍉+⍀⍤2⊢⍵⍴⍨(≢⍵),2,2÷⍨⊢/⍴⍵)⍸⍤1⍤¯1⍉↑,¨,⍳⍺}
