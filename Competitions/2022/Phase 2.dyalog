@@ -86,3 +86,31 @@ Base85←{
 
 
 ⍝ P6 Date
+
+DDN←{
+    ⍝ Method:
+    ⍝ Extract hours, minutes, and seconds
+    ⍝ Extract year and ISO year
+    ⍝ Extract day of year
+    ⍝ Bruteforce correct year and day
+    ⍝ This is much simpler than parsing the whole thing and calculating it
+    ⍝ It isn't much slower either, as the search space is small
+    parts←{⍵⊆⍨⍥,⍵∊⍥⎕C ⎕A,⎕D,'_'}                      ⍝ Extract alphanumeric + _ parts
+    patterns results←parts¨⍺ ⍵
+    h←⊃⍎¨'0',⍨results/⍨'h'∊¨patterns                  ⍝ Hour with a default value of 0
+    h⌈←⊃⍎¨'0',⍨results/⍨'t'∊¨patterns                 ⍝ 12 hour time, pick the maximum
+    h⌈←24|h+12×'P'=⊃⊃results/⍨'P'∊¨patterns           ⍝ If PM convert h to PM time
+    m←⊃⍎¨'0',⍨results[patterns(⊣⍳∩⍨),¨'m' 'mm' '_m']  ⍝ Minutes (avoid conflict with months)
+    s←⊃⍎¨'0',⍨results/⍨'s'∊¨patterns                  ⍝ Seconds
+    d←⊃⍎¨'0',⍨results/⍨'y'∊¨patterns                  ⍝ Day of year
+    Y←⊃⍎¨'0',⍨results/⍨'Y'∊¨patterns                  ⍝ Year
+    W←⊃⍎¨(⊂⍕Y),⍨results/⍨'W'∊¨patterns                ⍝ ISO year (default value Y)
+    days←d,(d=0)/(⍳366)                               ⍝ Possible days - all if d=0 else d
+    years←(1⌈W+¯1 0 1),(W=0)/⍳4                       ⍝ Possible years - first 4 if W=0 else W's neighbours
+    check←{                                           ⍝ Function to check a combination
+        0::⍬                                          ⍝ If there's an error: return ⍬
+        ⍵⍵≡⊃⍺⍺(1200⌶)dn←¯10 1 ⎕DT⊂⍺ ⍵ h m s:dn        ⍝ If the datenum produced is correct, return it
+        ⍬                                             ⍝ Otherwise return ⍬
+    }
+    ⊃∊years∘.(⍺ check ⍵)days                          ⍝ Return first valid date number
+}
