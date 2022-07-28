@@ -76,6 +76,99 @@ reshape2←{
 
 ⍝ P4 Voting
 
+rpart←{
+    ⍝ A random partition of ⍺ into ⍵ parts
+    ⍝ Based on the 'balls in cells' model
+    ⍝ Example: Splitting 5 into 3 parts:
+    ⍝ Required dividers = 2
+    ⍝ Total possibilties = 2 + 5 = 7
+    ⍝ 1 2 3 4 5 6 7
+    ⍝ | | | | | | |   possible divider spots
+    ⍝   2     5       randomly chosen spots
+    ⍝ ○ | ○ ○ | ○ ○   balls in each cell
+    ⍝ 1    2     2    1-⍨2-⍨/0,2 5,8
+
+    ⍝ dividers ← {⍵[⍋⍵]} (⍵-1) ? (⍺+⍵-1)
+    ⍝ dividers ← (⍳⍺+⍵-1) ~ ⍺ ? ⍺+⍵-1
+    ⍝ Both are equivalent
+    ⍝ Due to slowness in dyadic ? the second is faster if ⍺<⍵-1
+    dividers←⍺{⍺>⍵-1:{⍵[⍋⍵]}(⍵-1)?(⍺+⍵-1) ⋄ (⍳⍺+⍵-1)~⍺?⍺+⍵-1}⍵
+
+    ⍝ number of balls in each cell
+    1-⍨2-⍨/0,dividers,⍺+⍵
+}
+
+Method1←{
+    ⍝ Step 1: Generate all possible ballots
+    ⍝ Step 2: Generate a random permutation of ⍵ into ≢ballots parts
+    ⍝ This is efficient when |a is small (≤10), and therefore ≢ballots is reasonably small
+    ⍝ For example, ¯3 Method1 1e9 is fast, but ¯3 Method2 1e9 is infeasibly slow
+
+    pmat_all←{0=⍵:1 0⍴0 ⋄ ,[⍳2](⍒⍤1∘.=⍨⍳⍵)[;1,1+∇ ⍵-1]}
+    ⍝ Generate a matrix with all rankings 1-n
+    ⍝ Source: https://www.dyalog.com/blog/2015/07/permutations/
+    pmat_any←{0=⍵:0 0⍴0 ⋄ ,[⍳2]((⊢,1+0⌈⌈/)0⍪∇⍵-1)[;⍋⍤⍋⍤1∘.=⍨⍳⍵]}
+    ⍝ Generate a matrix with partial rankings 0-n
+    ⍝ Not in lexicographic order, but that's ok for a selection
+    ⍝ Code is based on the pmat_all code, but adapted
+    ⍝ At each stage, the highest unused position (1+0⌈⌈/) is 'interleaved'
+    ⍝        'abcd'[⍋⍤⍋⍤1∘.=⍨⍳4]
+    ⍝  dabc
+    ⍝  adbc
+    ⍝  abdc
+    ⍝  abcd
+
+    ballots←{⍵<0:pmat_any|⍵ ⋄ pmat_all ⍵}⍺
+    nb←≢ballots
+    ⍝ Out of interest, there is a closed form
+    ⍝ For positive ⍺, nb←!⍺
+    ⍝ For negative ⍺, nb←1-⍨⌊(*1)×!|a
+
+    ⍝ Generate a random permutation of ⍵ into nb parts
+    r ← ⍵ rpart nb
+    ⍝ return ballots chosen at least once and their frequencies
+    r,⍥⊂⍤0 1⍥((r≠0)⌿⊢)ballots
+}
+
+Method2←{
+    ⍝ This method generates ⍵ ballots at random and then counts the frequencies
+    ⍝ It is more efficient for large |⍺ and small ⍵
+    n←|⍺                                            ⍝ number of candidates
+    ballots ← ?⍤0⍨⍵⍴n                               ⍝ rankings from 1-n for each
+    ⍝ Given a random ballot x, say 1 4 2 3 5
+    ⍝ x-3 is ¯2 1 ¯1 0 2
+    ⍝ 0⌈x-3   0 1 0 0 2, which is a partially filled ballot
+    ballots ← {0⌈⍵-⍤1 0⊢1-⍨?(≢⍵)⍴n}⍣(⍺≠n)⊢ ballots  ⍝ conditionally derank
+    ,⍥⊆⍨∘≢⌸ ballots                                 ⍝ Count frequencies
+}
+
+Ballot←{
+    10≥|⍺:⍺ Method1 ⍵ ⍝ Efficient for smallish ⍺ and large ⍵
+    ⍺ Method2 ⍵ ⍝ Otherwise use Method2, efficient for large ⍺ and small ⍵
+    ⍝ For large ⍺ and large ⍵ the total number of ballots grows quickly
+    ⍝ As 'Every valid result should have a non-zero probability of appearing.', it seems infeasible
+}
+
+IRV←{
+    freqs←⊣/⍵
+    ranks←↑⊢/⍵
+    process←{
+        ⍝ ⍺ = candidates
+        ⍝ ⍵ = ranks
+        firsts←1=⍵                         ⍝ mark 1st choice candidates
+        count←freqs+.×firsts               ⍝ count total votes
+        p←(⊢÷+/)count                      ⍝ proportion
+        0≠winner←⊃⍺/⍨0.5<p:winner          ⍝ if there is a winner, return it
+        status←⍺,⍥⍪count                   ⍝ current status
+        lowest←p=⌊/p                       ⍝ least voted
+        ∧/lowest:status                    ⍝ if there is a tie, return the status
+        remaining←~lowest                  ⍝ remaining people are whoever wasn't lowest
+        adjusted←0⌈⍵-⍤1 0∨/lowest/firsts   ⍝ where they ranked a loser first, decrement rankings by 1
+        status,⍥⊆⍺ ∇⍥(remaining/⊢)adjusted ⍝ return the status and the next phase
+    }
+    (⍳⊢/⍴ranks)process ranks              ⍝ do the process
+}
+
 ⍝ P5 Base85
 Base85←{
     ⎕IO←0                            ⍝ 0 based indexing is easier for this
