@@ -13,7 +13,6 @@ runs←{1∨.=(+\⍵)⍸⍤1⍳⍺}
      ⎕IO←0                     ⍝ nicer for this problem
      rank←≢size←⍺              ⍝ rank and size of the result
      vals←(×/size)⍴0           ⍝ raveled matrix of values
-     ⍝{m[a⊥x/⍨a∧.>x←(1-⍨n↑⍵)+⍤0 1⊢(n↓⍵)⊥⍣¯1⍳×/n↓⍵]←⍺+1}
      amend←{
      ⍝ Function to modify vals as required
          start←rank↑⍵
@@ -45,6 +44,33 @@ fill2←{⍺⍴(⍳⍤≢⌈.×⊢)∧⌿1=(2 3 1⍉+⍀⍤2⊢⍵⍴⍨(≢⍵)
 subspaces←{⍵{∊0 1+-⍨\2⍴⌽1⌽⍸⍺=⍵}⍤99 0⍳⌈/,⍵}
 subspaces←⊢{∊(1--)\2⍴⌽1⌽⍸⍺=⍵}⍤99 0∘⍳⌈/⍤,
 ⍝ P2 Reshape
+
+reshape←{
+    mat←(|⍺)⍴⍵  ⍝ reshape without reversals
+    reverse_axis←{
+    ⍝ Conditionally reverse
+        elem axis←⍺
+        ⌽[axis]⍣(elem<0)⊢⍵
+    }
+    ⊃reverse_axis/(⍺,¨⍳≢⍺),⊂mat ⍝ reverse each axis if required
+}
+
+reshape2←{
+    s←⍺~⌊⍺                              ⍝ fractional values
+    0≡≢s: ⍺ reshape ⍵                   ⍝ If no special values, use part 1
+    ⍝ validity checking
+    1<≢s:'Only 1 special value allowed'⎕SIGNAL 8
+    ~0.5 1.5 2.5∊⍨|s←⊃s:'Special values can only be 0.5, 1.5, or 2.5'⎕SIGNAL 8
+
+    n←×/⍴⍵                              ⍝ number of elements of ⍵
+    whole←⍺~s                           ⍝ whole number axes
+    axis←n÷×/|whole                     ⍝ what is the other axis?
+    axis←{0.5=|s:⌊⍵ ⋄ ⌈⍵}axis           ⍝ floor if 0.5 else ceil
+    axes←|axis@{s=⍵}⍺                   ⍝ create new axes
+    data←{2.5=|s:(×/axes)↑,⍵ ⋄ ⍵}⍵      ⍝ pad with ↑ if 2.5=|s
+    signed←axes××⍺                      ⍝ convert to original signs
+    signed reshape data                 ⍝ use part 1 reshape
+}
 
 ⍝ P3 Meetings
 
