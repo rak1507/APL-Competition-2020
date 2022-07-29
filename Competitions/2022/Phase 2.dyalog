@@ -228,29 +228,38 @@ Base85←{
 ⍝ P6 Date
 
 DDN←{
-    ⍝ Method:
-    ⍝ Extract hours, minutes, and seconds
-    ⍝ Extract year and ISO year
-    ⍝ Extract day of year
-    ⍝ Bruteforce correct year and day
-    ⍝ This is much simpler than parsing the whole thing and calculating it
-    ⍝ It isn't much slower either, as the search space is small
-    parts←{⍵⊆⍨⍥,⍵∊⍥⎕C ⎕A,⎕D,'_'}                      ⍝ Extract alphanumeric + _ parts
-    patterns results←parts¨⍺ ⍵
-    h←⊃⍎¨'0',⍨results/⍨'h'∊¨patterns                  ⍝ Hour with a default value of 0
-    h⌈←⊃⍎¨'0',⍨results/⍨'t'∊¨patterns                 ⍝ 12 hour time, pick the maximum
-    h⌈←24|h+12×'P'=⊃⊃results/⍨'P'∊¨patterns           ⍝ If PM convert h to PM time
-    m←⊃⍎¨'0',⍨results[patterns(⊣⍳∩⍨),¨'m' 'mm' '_m']  ⍝ Minutes (avoid conflict with months)
-    s←⊃⍎¨'0',⍨results/⍨'s'∊¨patterns                  ⍝ Seconds
-    d←⊃⍎¨'0',⍨results/⍨'y'∊¨patterns                  ⍝ Day of year
-    Y←⊃⍎¨'0',⍨results/⍨'Y'∊¨patterns                  ⍝ Year
-    W←⊃⍎¨(⊂⍕Y),⍨results/⍨'W'∊¨patterns                ⍝ ISO year (default value Y)
-    days←d,(d=0)/(⍳366)                               ⍝ Possible days - all if d=0 else d
-    years←(1⌈W+¯1 0 1),(W=0)/⍳4                       ⍝ Possible years - first 4 if W=0 else W's neighbours
-    check←{                                           ⍝ Function to check a combination
-        0::⍬                                          ⍝ If there's an error: return ⍬
-        ⍵⍵≡⊃⍺⍺(1200⌶)dn←¯10 1 ⎕DT⊂⍺ ⍵ h m s:dn        ⍝ If the datenum produced is correct, return it
-        ⍬                                             ⍝ Otherwise return ⍬
+    c←⍺⊂⍨(¯1⌽⍺≠'_')∧1,2≠/⎕C ⍺
+    months←' '(≠⊆⊢)'January February March April May June July August September October November December'
+    days←' '(≠⊆⊢)'Monday Tuesday Wednesday Thursday Friday Saturday Sunday'
+    M D h m s w h y Y W←0
+    parse←{
+        0≡≢⍺:Y W y h m s
+        ~(⎕D,⎕A)∊⍨1 ⎕C⊢/p←⊃⍺:(1↓⍺)∇((≢p)↓⍵)
+        case←(⊂p)∊,¨
+        ⍝ match on possible patterns
+        case'M' 'MM' '_M': (1↓⍺)∇n↓⍵ ⊣ M⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
+        case'D' 'DD' '_D': (1↓⍺)∇n↓⍵ ⊣ D⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
+        case'h' 'hh' '_h': (1↓⍺)∇n↓⍵ ⊣ h⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
+        case'm' 'mm' '_m': (1↓⍺)∇n↓⍵ ⊣ m⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
+        case's' 'ss' '_s': (1↓⍺)∇n↓⍵ ⊣ s⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
+        case'w' 'ww' '_w': (1↓⍺)∇n↓⍵ ⊣ w⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
+        case't' 'tt' '_t': (1↓⍺)∇n↓⍵ ⊣ h⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
+        case'y' 'yy' '_y': (1↓⍺)∇n↓⍵ ⊣ y⊢←⍎⍵↑⍨n←1 3[≢p]⌈+/∧\3↑⍵∊⎕D
+        case'YY' 'YYYY':   (1↓⍺)∇n↓⍵ ⊣ Y⊢←⍎(n←≢p)↑⍵
+        case'WW' 'WWWW':   (1↓⍺)∇n↓⍵ ⊣ W⊢←⍎(n←≢p)↑⍵
+        'o'∊⎕C p: (1↓⍺)∇((≢p)↓⍵)
+        'p'∊⎕C p: (1↓⍺)∇((≢p)↓⍵) ⊣ h⌈←24|h+12×'p'∊⎕C p
+        case'd':  (1↓⍺)∇(1↓⍵)
+        case'MMM' 'Mmm' 'mmm' '_mm':     (1↓⍺)∇ 3↓⍵ ⍝ ⊃⍸(⊃⍷⍥⎕C∘⍵)¨3↑¨months
+        case'MMMM' 'Mmmm' 'mmmm' '_mmm': (1↓⍺) ∇(≢ months⊃⍨⊃⍸(⊃⍷⍥⎕C∘⍵)¨months)↓⍵
+        case'DDD' 'Ddd' 'ddd' '_dd':  (1↓⍺) ∇ 3↓⍵
+        case'DDDD' 'Dddd' 'dddd' '_ddd':(1↓⍺) ∇ (≢ days⊃⍨⊃⍸(⊃⍷⍥⎕C∘⍵)¨days)↓⍵
     }
-    ⊃∊years∘.(⍺ check ⍵)days                          ⍝ Return first valid date number
+    Y W y h m s←c parse ⍵
+    days←y,(y=0)/⍳366  ⍝ possible days
+    W⌈←Y
+    years←(1⌈W+¯1 0 1),(W=0)/⍳10 ⍝ possible years
+    check←{0::⍬⋄⍵⍵≡⊃⍺⍺(1200⌶)dn←¯10 1 ⎕DT⊂⍺ ⍵ h m s:dn⋄⍬}
+    ⊃∊years∘.(⍺ check ⍵)days ⍝ bruteforce
 }
+
