@@ -170,13 +170,30 @@ IRV←{
 }
 
 ⍝ P5 Base85
-Base85←{
-    ⎕IO←0                            ⍝ 0 based indexing is easier for this
-    C←80=⎕DR⍵                        ⍝ 0 for encode 1 for decode
-    X Y←C⌽4 5 ⋄ A B←C⌽85 256         ⍝ constants
-    ((≢⍵)-x×X)↓(⍺⌷⍨⊂)⍣(~C),⍉(Y/A)⊤B⊥⍉x X⍴⍺⍳⍣C⊢⍵↑⍨X×x←⌈X÷⍨≢⍵
+
+Encode←{
+    ⎕IO←0                                  ⍝ base encodings work better with ⎕IO←0
+    chunks←⌈4÷⍨≢⍵                          ⍝ number of chunks required
+    padded←(4×chunks)↑⍵                    ⍝ pad data
+    added←padded-⍥≢⍵                       ⍝ how many elements were added
+    convert←,⍉(5/85)⊤256⊥⍉chunks 4⍴padded  ⍝ convert to base 85 from base 256
+    ⍺[(-added)↓convert]                    ⍝ drop the number of added elements
 }
 
+Decode←{
+    ⎕IO←0
+    filtered←⍺⍳⍵∩⍺                        ⍝ Ordinal values of characters within charset
+    chunks←⌈(≢filtered)÷5                 ⍝ Number of chunks
+    added←(5×chunks)-≢filtered            ⍝ How many values need to be added
+    padded←filtered,added⍴84              ⍝ Pad with 84s
+    convert←,⍉(4/256)⊤85⊥⍉chunks 5⍴padded ⍝ Convert to base 85 and back to base 256
+    (-added)↓convert                      ⍝ Drop the number of added values from the end
+}
+
+Base85←{
+    0≡⊃0⍴⍵:⍺ Encode ⍵  ⍝ if ⍵ is numeric, encode
+    ⍺ Decode ⍵         ⍝ otherwise decode
+}
 
 ⍝ P6 Date
 
