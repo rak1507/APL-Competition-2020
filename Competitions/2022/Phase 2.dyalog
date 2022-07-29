@@ -228,6 +228,7 @@ Base85←{
 ⍝ P6 Date
 
 DDN←{
+    ⎕FR←1287                        ⍝ Need more precision for this
     c←⍺⊂⍨(¯1⌽⍺≠'_')∧1,2≠/⎕C ⍺
     months←' '(≠⊆⊢)'January February March April May June July August September October November December'
     days←' '(≠⊆⊢)'Monday Tuesday Wednesday Thursday Friday Saturday Sunday'
@@ -237,29 +238,29 @@ DDN←{
         ~(⎕D,⎕A)∊⍨1 ⎕C⊢/p←⊃⍺:(1↓⍺)∇((≢p)↓⍵)
         case←(⊂p)∊,¨
         ⍝ match on possible patterns
-        case'M' 'MM' '_M': (1↓⍺)∇n↓⍵ ⊣ M⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
-        case'D' 'DD' '_D': (1↓⍺)∇n↓⍵ ⊣ D⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
-        case'h' 'hh' '_h': (1↓⍺)∇n↓⍵ ⊣ h⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
-        case'm' 'mm' '_m': (1↓⍺)∇n↓⍵ ⊣ m⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
-        case's' 'ss' '_s': (1↓⍺)∇n↓⍵ ⊣ s⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
-        case'w' 'ww' '_w': (1↓⍺)∇n↓⍵ ⊣ w⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
-        case't' 'tt' '_t': (1↓⍺)∇n↓⍵ ⊣ h⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
-        case'y' 'yy' '_y': (1↓⍺)∇n↓⍵ ⊣ y⊢←⍎⍵↑⍨n←1 3[≢p]⌈+/∧\3↑⍵∊⎕D
-        case'YY' 'YYYY':   (1↓⍺)∇n↓⍵ ⊣ Y⊢←⍎(n←≢p)↑⍵
-        case'WW' 'WWWW':   (1↓⍺)∇n↓⍵ ⊣ W⊢←⍎(n←≢p)↑⍵
-        'o'∊⎕C p: (1↓⍺)∇((≢p)↓⍵)
-        'p'∊⎕C p: (1↓⍺)∇((≢p)↓⍵) ⊣ h⌈←24|h+12×'p'∊⎕C p
-        case'd':  (1↓⍺)∇(1↓⍵)
-        case'MMM' 'Mmm' 'mmm' '_mm':     (1↓⍺)∇ 3↓⍵ ⍝ ⊃⍸(⊃⍷⍥⎕C∘⍵)¨3↑¨months
-        case'MMMM' 'Mmmm' 'mmmm' '_mmm': (1↓⍺) ∇(≢ months⊃⍨⊃⍸(⊃⍷⍥⎕C∘⍵)¨months)↓⍵
-        case'DDD' 'Ddd' 'ddd' '_dd':  (1↓⍺) ∇ 3↓⍵
-        case'DDDD' 'Dddd' 'dddd' '_ddd':(1↓⍺) ∇ (≢ days⊃⍨⊃⍸(⊃⍷⍥⎕C∘⍵)¨days)↓⍵
+        case'M' 'MM' '_M':(1↓⍺)∇ n↓⍵⊣M⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
+        case'D' 'DD' '_D':(1↓⍺)∇ n↓⍵⊣D⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
+        case'h' 'hh' '_h':(1↓⍺)∇ n↓⍵⊣h⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
+        case'm' 'mm' '_m':(1↓⍺)∇ n↓⍵⊣m⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
+        case's' 'ss' '_s':(1↓⍺)∇ n↓⍵⊣s⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
+        case'w' 'ww' '_w':(1↓⍺)∇ n↓⍵⊣w⊢←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
+        case't' 'tt' '_t':(1↓⍺)∇ n↓⍵⊣h⌈←⍎⍵↑⍨n←(≢p)⌈+/2↑⍵∊⎕D
+        case'y' 'yy' '_y':(1↓⍺)∇ n↓⍵⊣y⊢←⍎⍵↑⍨n←1 3[≢p]⌈+/∧\3↑⍵∊⎕D
+        case'YY' 'YYYY':(1↓⍺)∇ n↓⍵⊣Y⊢←⍎(n←≢p)↑⍵
+        case'WW' 'WWWW':(1↓⍺)∇ n↓⍵⊣W⊢←⍎(n←≢p)↑⍵
+        'o'∊⎕C p:(1↓⍺)∇((≢p)↓⍵)
+        'p'∊⎕C p:(1↓⍺)∇((≢p)↓⍵)⊣h⌈←24|h+12×'p'∊⎕C p
+        case'd':(1↓⍺)∇(1↓⍵)
+        case'MMM' 'Mmm' 'mmm' '_mm':     (1↓⍺)∇3↓⍵
+        case'MMMM' 'Mmmm' 'mmmm' '_mmm': (1↓⍺)∇(≢months⊃⍨⊃⍸(⊃⍷⍥⎕C∘⍵)¨months)↓⍵
+        case'DDD' 'Ddd' 'ddd' '_dd':     (1↓⍺)∇3↓⍵
+        case'DDDD' 'Dddd' 'dddd' '_ddd': (1↓⍺)∇(≢days⊃⍨⊃⍸(⊃⍷⍥⎕C∘⍵)¨days)↓⍵
     }
     Y W y h m s←c parse ⍵
-    days←y,(y=0)/⍳366  ⍝ possible days
+    days←y,(y=0)/⍳366               ⍝ possible days
     W⌈←Y
-    years←(1⌈W+¯1 0 1),(W=0)/⍳10 ⍝ possible years
-    check←{0::⍬⋄⍵⍵≡⊃⍺⍺(1200⌶)dn←¯10 1 ⎕DT⊂⍺ ⍵ h m s:dn⋄⍬}
-    ⊃∊years∘.(⍺ check ⍵)days ⍝ bruteforce
+    years←(1⌈W+¯1 0 1),(W=0)/⍳10    ⍝ possible years
+    ⍝ check if day/year combination is valid
+    check←{0::⍬ ⋄ ⍵⍵≡⊃⍺⍺(1200⌶)dn←¯10 1 ⎕DT⊂⍺ ⍵ h m s:dn ⋄ ⍬}
+    ⊃∊years∘.(⍺ check ⍵)days        ⍝ bruteforce
 }
-
