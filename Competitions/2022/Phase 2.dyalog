@@ -68,6 +68,42 @@ reshape2←{
 
 ⍝ P3 Meetings
 
+toTS←{⊃⊢⍤//'/: '⎕VFI⍵} ⍝ extract numbers from timestamp
+
+Attended←{
+    names←⍺[;1]
+    names←names[grade←⍋names]                      ⍝ sort names, and store the grade
+    mins←{'--'≡⍵:0⋄⌊1440×¯1 1⎕DT⊂¯1⌽@1 2 3⊢toTS ⍵} ⍝ convert the time to minutes
+    join←mins¨⍺[grade;2]
+    leave←mins¨⍺[grade;3]
+    start←mins¨⍵[;3]
+    end←mins¨⍵[;4]
+    time←0⌈(leave∘.⌊end)-(join∘.⌈start)            ⍝ time in each session
+    threshold←2÷⍨end-start                         ⍝ threshold for having attended
+    total←names+⌿⍤⊢⌸time                           ⍝ sum the times grouping by names
+    threshold≤⍤1⊢total                             ⍝ check above attending threshold
+} 
+
+ShowedUp←{
+    map←⍉⍺ Attended ⍵                       ⍝ who attended what sessions, transposed for convenience
+    names←⍺[grade←⍋⍺[;1];1]                 ⍝ Sort names and store the grade
+    years←⊢/∘toTS¨⍺[grade;4]                ⍝ year for each attendee
+    uniq←{⍵[⍋⍵]}∪years                      ⍝ unique years in sorted order (could hardcode 2020 and 2021)
+    reg←⍉names{uniq∊⍵}⌸years                ⍝ which of the years did attendees register for
+    e_yd←(↑toTS¨⊢/⍵)[;3 2]                  ⍝ year and day of each event (⍵ is in sorted order already)
+    res←⍪uniq                               ⍝ result
+    res,←+/reg                              ⍝ how many registered by year
+    res,←2 2⍴e_yd{+/∨⌿⍵}⌸map                ⍝ how many attended, group by year + day
+    res,reg{+/∧⌿⍺>⍤1⊢map⌿⍨⍵=⊣/e_yd}⍤¯1⊢uniq ⍝ how many attended none of the ones they were registered for
+}
+
+Popular←{
+    years←(3⊃toTS)¨⊢/⍵                   ⍝ years of each session
+    sessions←'break'∘≢¨⍵[;2]             ⍝ sessions that aren't breaks
+    counts←(+⌿⍺),⍥⍪⍵[;2]                 ⍝ how many people attended each session
+    years{⊂⍵[⍒⊣/⍵;]}⌸⍥(sessions⌿⊢)counts ⍝ filter breaks, group by year, sort descending
+}
+
 ⍝ P4 Voting
 
 rpart←{
