@@ -50,3 +50,20 @@ sortVersions←{
   convert←{⍎¨@3 4 5⊢(~⍵∊'-.')⊆⍵}
   pkgs[⍋convert¨pkgs]  ⍝ sort by conversion
 }
+
+makeChange←{
+    0≡≢⍵:(1,≢⍺)⍴0 ⍝ If ⍵=0 return a row of 0s
+
+    ⍝ If ⍺ is a singleton element, and ⍺ divides ⍵, return ⍵÷⍺
+    ⍝ Else return an empty (0×1) matrix
+    1≡≢⍺:(0=⊃⍺|⍵)1⍴⌊⍵÷⍺
+
+    counts←0,⍳⌊⍵÷coin←⊃⌽⍺ ⍝ the possible counts for the maximum coin
+
+   ⍝   (⊢,⍨(¯1↓⍺)∇⍵-coin×⊢)
+   ⍝              ⍵-coin×⊢          ⍝ what's left
+   ⍝       (¯1↓⍺)∇                  ⍝ find combinations with the other coins
+   ⍝    ⊢,⍨                         ⍝ append the count
+   ⍝⊃⍪/(        ...       )¨counts  ⍝ apply to each count, and join the rows
+    ⊃⍪/(⊢,⍨(¯1↓⍺)∇⍵-coin×⊢)¨counts
+}
