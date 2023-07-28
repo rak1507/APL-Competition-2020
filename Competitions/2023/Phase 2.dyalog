@@ -67,3 +67,27 @@ makeChange←{
    ⍝⊃⍪/(        ...       )¨counts  ⍝ apply to each count, and join the rows
     ⊃⍪/(⊢,⍨(¯1↓⍺)∇⍵-coin×⊢)¨counts
 }
+
+partition←{
+    rank←≢dim←⍴⍵                      ⍝ rank and dimensions of ⍵
+    spec←⊆,⍺                          ⍝ ensure the left argument has depth ≥ 2
+    lp←{⍺,⍨1⍴⍨⍵-≢⍺}                   ⍝ left pad ⍺ with 1s to length ⍵
+    ⍝ left pad the specs and append any default all 1 values required
+    orig_shape←⊃⍺                     ⍝ original shape (for later)
+    shape move start←(spec lp¨rank),(3-≢spec)⍴⊂rank⍴1
+    ⍝ For each dimension:
+    ⍝ The minimum indices are of the form start + k×move
+    ⍝ The maximum indices are of the form start + shape + ¯1 + k×move
+    ⍝ For some integer k ≥ 0
+    ⍝ dim ≥ start + shape + ¯1 + k×move
+    ⍝ So the maximum value of k is ⌊ (dim + 1 - start + shape) ÷ move
+    k←⌊(dim+1-start+shape)÷move
+
+    ⍝ if any of the ks are < 0, the shape doesn't fit
+    ⍝ so return an empty vector with the suitable prototype
+    ∨/k<0:0⍴⊂shape⍴⊃⍵
+    gen←{↑,¨,1-⍨⍳⍵}                   ⍝ generate indices from 0 to ⍵-1
+    idx←start+⍤1⊢move×⍤1 gen k+1    ⍝ start indices
+    all←idx+⍤1⍤1 2 gen shape       ⍝ all indices
+    orig_shape⊂⍤⍴⍤1⊢all⌷⍤1 99⊢⍵  ⍝ index into ⍵ and reshape
+}
