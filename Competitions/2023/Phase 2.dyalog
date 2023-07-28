@@ -43,3 +43,10 @@ vin←{
     17≡≢⍵: ⍵ ≡ res
     ¯1    ⍝ some other length
 }
+
+sortVersions←{
+  pkgs←,⊆⍵  ⍝ create vector from right argument
+  ⍝ 'dyalog' 'jarvis' 1 11 7 'patch' ≡ convert 'dyalog-jarvis-1.11.7-patch'
+  convert←{⍎¨@3 4 5⊢(~⍵∊'-.')⊆⍵}
+  pkgs[⍋convert¨pkgs]  ⍝ sort by conversion
+}
